@@ -2,14 +2,28 @@ import sys
 import math
 
 def answer(src, dest):
-    """Solved using a graph model"""
+    """Graph + Dijkstra"""
+    size = 64
+    graph = init_graph(size)
+    moves = get_shortest_path_or_none(range(size), graph, src, dest)
+    if moves == None:
+      return None
+    else:
+      return len(moves)
 
-def init_graph():
+def init_graph(size):
     # Node: int
     # Edge: int
     # edges_of_node: int -> set(int)
     edges_of_node = {}
+    for i in range(size):
+      moves = get_possible_displacements(i)
+      neighbours = map(lambda x: i + x, moves)
+      edges_of_node[i] = set(neighbours)
+    
+    return edges_of_node
 
+def get_possible_displacements(i):
     # Relative moves:
     #  #h#a#       
     #  g###b     
@@ -17,7 +31,7 @@ def init_graph():
     #  f###c     
     #  #e#d#     
     #
-    # Relative diaplacements:
+    # Relative displacements:
     a = -15
     b = -6
     c = 10
@@ -27,39 +41,27 @@ def init_graph():
     g = -10
     h = -17
 
-    # What moves can each cell play?
-    for i in range(64):
-      moves = []
-      column = i % 8
-      row = math.floor(i / 8)
-      if (row >= 2) & (column <= 6):
-        moves.append(a)
+    # Where can i move to?
+    moves = []
+    column = i % 8
+    row = math.floor(i / 8)
+    if (row >= 2) & (column <= 6): moves.append(a)
 
-      if (row >= 1) & (column <= 5):
-        moves.append(b)
+    if (row >= 1) & (column <= 5): moves.append(b)
 
-      if (row <= 6) & (column <= 5):
-        moves.append(c)
+    if (row <= 6) & (column <= 5): moves.append(c)
 
-      if (row <= 5) & (column <= 6):
-        moves.append(d)
+    if (row <= 5) & (column <= 6): moves.append(d)
 
-      if (row <= 5) & (column >= 1):
-        moves.append(e)
+    if (row <= 5) & (column >= 1): moves.append(e)
 
-      if (row <= 6) & (column >= 2):
-        moves.append(f)
-      
-      if (row >= 1) & (column >= 2):
-        moves.append(g)
-
-      if (row >= 2) & (column >= 1):
-        moves.append(h)
-      
-      neighbours = map(lambda x: i + x, moves)
-      edges_of_node[i] = set(neighbours)
+    if (row <= 6) & (column >= 2): moves.append(f)
     
-    return edges_of_node
+    if (row >= 1) & (column >= 2): moves.append(g)
+
+    if (row >= 2) & (column >= 1):  moves.append(h)
+    
+    return moves
 
 def get_shortest_path_or_none(all_nodes, edges_of_node, src, dest):
     distance = dict([(x, 0) if x == src else (x, sys.maxsize) for x in all_nodes])
@@ -83,20 +85,7 @@ def get_shortest_path_or_none(all_nodes, edges_of_node, src, dest):
         res.insert(0, next)
         next = previous[next]
 
-      return [src] + res
+      return res
+
     else:
       return None
-
-
-all_nodes = [1,2,3,4,5]
-edges_of_node = dict([
-  (1, [2, 3]),
-  (2, [4]),
-  (3, []),
-  (4, [5]),
-  (5, [])
-])
-
-graph = init_graph()
-r = get_shortest_path_or_none(all_nodes, edges_of_node, 1, 5)
-print(r)
