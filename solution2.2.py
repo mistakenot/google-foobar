@@ -67,13 +67,13 @@ def get_shortest_path_or_none(graph, src, dest):
     unvisited = set(graph.keys())
     previous = {}
 
+    if src == dest:
+      return []
+
     while (len(unvisited) != 0):
       current = min(unvisited, key=distance.get)
       unvisited.remove(current)
-      
-      if current == dest:
-        break
-      
+
       for neighbour in graph[current]:
         new_dist = distance[current] + 1
         if new_dist < distance[neighbour]:
