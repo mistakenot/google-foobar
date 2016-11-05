@@ -3,20 +3,19 @@ import math
 
 def answer(src, dest):
     """Graph + Dijkstra"""
-    size = 64
-    graph = init_graph(size)
-    moves = get_shortest_path_or_none(range(size), graph, src, dest)
+    graph = init_graph()
+    moves = get_shortest_path_or_none(graph, src, dest)
     if moves == None:
       return None
     else:
       return len(moves)
 
-def init_graph(size):
+def init_graph():
     # Node: int
     # Edge: int
     # edges_of_node: int -> set(int)
     edges_of_node = {}
-    for i in range(size):
+    for i in range(64):
       moves = get_possible_displacements(i)
       neighbours = map(lambda x: i + x, moves)
       edges_of_node[i] = set(neighbours)
@@ -59,33 +58,38 @@ def get_possible_displacements(i):
     
     if (row >= 1) & (column >= 2): moves.append(g)
 
-    if (row >= 2) & (column >= 1):  moves.append(h)
+    if (row >= 2) & (column >= 1): moves.append(h)
     
     return moves
 
-def get_shortest_path_or_none(all_nodes, edges_of_node, src, dest):
-    distance = dict([(x, 0) if x == src else (x, sys.maxsize) for x in all_nodes])
-    unvisited = set(all_nodes)
+def get_shortest_path_or_none(graph, src, dest):
+    distance = dict([(x, 0) if x == src else (x, sys.maxsize) for x in graph.keys()])
+    unvisited = set(graph.keys())
     previous = {}
 
-    while len(unvisited) != 0 & (dest in unvisited):
-      curr = min(unvisited, key=distance.get)
-      unvisited.remove(curr)
+    while (len(unvisited) != 0):
+      current = min(unvisited, key=distance.get)
+      unvisited.remove(current)
       
-      for neighbour in edges_of_node[curr]:
-        new_dist = distance[curr] + 1
+      if current == dest:
+        break
+      
+      for neighbour in graph[current]:
+        new_dist = distance[current] + 1
         if new_dist < distance[neighbour]:
           distance[neighbour] = new_dist
-          previous[neighbour] = curr
+          previous[neighbour] = current
     
     if previous.has_key(dest):
       next = dest
-      res = []
+      result = []
       while previous.has_key(next):
-        res.insert(0, next)
+        result.insert(0, next)
         next = previous[next]
 
-      return res
+      return result
 
     else:
       return None
+
+print(answer(0, 0))
