@@ -38,3 +38,7 @@ Inputs:
     (int) dest = 1
 Output:
     (int) 3
+
+
+
+Awesome! Commander Lambda was so impressed by your efforts that she's made you her personal assistant. You'll be helping her directly with her work, which means you'll have access to all of her files-including the ones on the LAMBCHOP doomsday device. This is the chance you've been waiting for. Can you use your new access to finally topple Commander Lambda's evil empire?
