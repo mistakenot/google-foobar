@@ -1,14 +1,9 @@
-import sys
 import math
+import sys
 
 def answer(src, dest):
-    """Graph + Dijkstra"""
     graph = init_graph()
-    moves = get_shortest_path_or_none(graph, src, dest)
-    if moves == None:
-      return None
-    else:
-      return len(moves)
+    return get_length_of_shortest_path(graph, src, dest)
 
 def init_graph():
     # Node: int
@@ -62,34 +57,30 @@ def get_possible_displacements(i):
     
     return moves
 
-def get_shortest_path_or_none(graph, src, dest):
-    distance = dict([(x, 0) if x == src else (x, sys.maxsize) for x in graph.keys()])
+def get_length_of_shortest_path(graph, src, dest):
+    """
+    Returns length of shortest path or None if one doesn't exist (Dijkstra).
+
+    :param graph: Graph of type int -> set(int).
+    :param src: Start node of type int.
+    :param dest: Destination node of type int.
+    :return: returns array of moves.
+    """
+    distance = dict([(x, 0) if x == src else (x, sys.maxint) for x in graph.keys()])
     unvisited = set(graph.keys())
     previous = {}
-
-    if src == dest:
-      return []
 
     while (len(unvisited) != 0):
       current = min(unvisited, key=distance.get)
       unvisited.remove(current)
-
+      
       for neighbour in graph[current]:
         new_dist = distance[current] + 1
         if new_dist < distance[neighbour]:
           distance[neighbour] = new_dist
           previous[neighbour] = current
     
-    if previous.has_key(dest):
-      next = dest
-      result = []
-      while previous.has_key(next):
-        result.insert(0, next)
-        next = previous[next]
-
-      return result
-
-    else:
+    if distance[dest] == sys.maxint:
       return None
-
-print(answer(0, 0))
+    else:
+      return distance[dest]
