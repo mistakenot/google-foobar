@@ -1,40 +1,67 @@
+import math
+
 def answer(M, F):
-    # Start with 1M, 1F
-    # M is on the right
-    # F is on the left
-    return (1, 1)
+    result = get_generation_else_none(M, F)
+    return "impossible" if result == None else str(result)
 
+def get_generation_else_none(m, f):
+    """
+    Get the generation of this pair if they are valid leaf nodes
+    of (1, 1) in the tree.
 
-# Model as a tree:
-#           (x, y)
-#           /     \
-#     (x+y, y)      (x, y+x)
-#     /    \         /    \
-# (x+2y, y)(x+y, x+y)
+    :param m: Value representing number of Mach bombs.
+    :param f: Value representing number of Facula bombs.
+    :return: Generation number of None if invalid.
+    The model for the tree is:
+           (x, y)
+           |    |
+     (x+y, y)  (x, y+x)
 
-def get_tree(start, n):
-    if n == 0:
-        return [start, [], []]
-    else:
-        left, right  = get_next_generation(start)
-        return [start, [get_tree(left, n-1), get_tree(right, n-1)]]
+    To go back a generation, we subtract min(x, y) from max(x, y) for one value
+    and retain min(x, y) in its same position for the other.
+    """
+    x = m
+    y = f
+    gen_count = 0
 
-def get_next_generation(pair_of_vectors):
-    m = pair_of_vectors[0]
-    f = pair_of_vectors[1]
-    # Left: (m+f, f)
-    left = (add_v(m, f), f)
-    # Right: (m, f+m)
-    right = (m, add_v(m, f))
-    return (left, right)
+    if x == 0 or y == 0:
+        return None
+    
+    while x > 1 and y > 1:
+        if x % y == 0 or y % x == 0:
+            # We would never be able to reach the root node.
+            return None
 
-def add_v(v1, v2):
-    return (v1[0] + v2[0], v1[1] + v2[1])
+        # Aiming for clarity over DRY
+        elif x > y:
+            # n is the number of times we can subtract 
+            #  y from x until y > x
+            n = math.trunc(x/y)
+            x -= (n * y)
+            gen_count += n
+        else:
+            # n is the number of times we can subtract 
+            #  x from y until x > y
+            n = math.trunc(y/x)
+            y -= (n * x)
+            gen_count += n
+    
+    # As soon as either number is 1 we know we are on either
+    #  of the extreme edges of the tree. No need to count all the
+    #  way back, just add the difference between the two to the 
+    #  generation count.
+    return gen_count + max(x, y) - min(x, y)
 
-def total_v(v):
-    return v[0] + v[1]
+big_str = "100000000000000000000000000000000000000000000000000"
+big_int = long(big_str)
 
-start = ((1,0), (0,1))
-next = get_next_generation(start)
-tree = get_tree(start, 3)
-print(tree)
+print(get_generation_else_none(big_int, 7) == 14285714285714285714285714285714285714285714285718)
+
+print(get_generation_else_none(2, 1) == 1)
+print(get_generation_else_none(4, 7) == 4)
+print(get_generation_else_none(2, 4) == None)
+print(get_generation_else_none(7, 5) == 4)
+print(get_generation_else_none(0, 0) == None)
+print(get_generation_else_none(1, 0) == None)
+print(get_generation_else_none(0, 1) == None)
+print(get_generation_else_none(1, 1) == 0)
