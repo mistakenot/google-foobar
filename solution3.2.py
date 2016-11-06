@@ -1,7 +1,7 @@
 import math
 
 def answer(M, F):
-    result = get_generation_else_none(M, F)
+    result = get_generation_else_none(long(M), long(F))
     return "impossible" if result == None else str(result)
 
 def get_generation_else_none(m, f):
@@ -11,7 +11,8 @@ def get_generation_else_none(m, f):
 
     :param m: Value representing number of Mach bombs.
     :param f: Value representing number of Facula bombs.
-    :return: Generation number of None if invalid.
+    :return: Generation number or None if invalid.
+    
     The model for the tree is:
            (x, y)
            |    |
@@ -24,7 +25,7 @@ def get_generation_else_none(m, f):
     y = f
     gen_count = 0
 
-    if x == 0 or y == 0:
+    if x < 1 or y < 1:
         return None
     
     while x > 1 and y > 1:
@@ -33,6 +34,10 @@ def get_generation_else_none(m, f):
             return None
 
         # Aiming for clarity over DRY
+        #
+        # Rather than looping over every generation we can optimise
+        #  by jumping back multiple generations depending on how large
+        #  the difference is between the two numbers.
         elif x > y:
             # n is the number of times we can subtract 
             #  y from x until y > x
