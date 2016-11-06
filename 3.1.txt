@@ -42,3 +42,6 @@ Inputs:
     (int) length = 4
 Output:
     (int) 14
+
+
+There are a lot of difficult things about being undercover as Commander Lambda's personal assistant, but you have to say, the personal spa and private hot cocoa bar are pretty awesome.
