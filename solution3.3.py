@@ -1,75 +1,60 @@
+import math
+
 def answer(n):
+    return 1
 
+def q(k):
+    # Accumulate the result
+    result = a(k)
+    # Number of loop iterations
+    i = 0
+    # Used to control +|- flipping in sequence
+    flip = 1
+    while k >= pentagonal(i):
+        # Generates 0, 1, 1, 0, 0, 1, 1, 0, 0...
+        flip = (flip + (k % 2)) % 2
+        sign = math.pow(-1, flip)
+        pent = pentagonal(i)
+        prev = q(k - pent)
 
-"""
-Problem is finding all unique partitions of number Name
-2 can be composed of:
-    2
-    1 + 1
-    (2 combos)
+        log = (k, sign, pent)
+        print(log)
+        result += (math.pow(-1, flip) * prev)
+        i += 1
 
-3 can be composed of:
-    3
-    2 + 1
-    1 + 1 + 1
-    (3 combos)
-4 can be composed of:
-    4
-    3 + 1
-    2 + 2
-    2 + 1 + 1
-    1 + 1 + 1 + 1
-    (5 combos)
+    return result
 
-5 can be composed of:
-    5
-    4 + 1
-    3 + 2
-    3 + 1 + 1
-    2 + 2 + 1
-    2 + 1 + 1 + 1
-    1 + 1 + 1 + 1 + 1
-    (7 combos)
+def a(k):
+    """
+    a(k) is (-1)^m if k = 3m^2 - m for some integer m, else 0.
+    m is calculated using quadratic formula: (-b +|- math.sqrt(b^2 - 4ac)) / 2a
+    """
+    m1 = (1 + math.sqrt(1 + (12*k))) / 6
+    m2 = (1 - math.sqrt(1 + (12*k))) / 6
 
-6 can be composed of:
-    6
-    5 + 1
-    4 + 2
-    4 + 1 + 1
-    3 + 3
-    3 + 2 + 1
-    3 + 1 + 1 + 1 
-    2 + 2 + 2
-    2 + 2 + 1 + 1
-    2 + 1 + 1 + 1 + 1
-    1 + 1 + 1 + 1 + 1 + 1
-    (11 combos)
+    if math.trunc(m1) == m1:
+        return math.pow(-1, m1)
+    elif math.trunc(m2) == m2:
+        return math.pow(-1, m2)
+    else:
+        return 0
 
-7 can be composed of:
-    7
-    6 + 1
-    5 + 2
-    5 + 1 + 1
-    4 + 3
-    4 + 2 + 1
-    4 + 1 + 1 + 1
-    3 + 3 + 1
-    3 + 2 + 2
-    3 + 2 + 1 + 1
-    3 + 1 + 1 + 1 + 1
-    2 + 2 + 2 + 1
-    2 + 2 + 1 + 1 + 1
-    2 + 1 + 1 + 1 + 1 + 1
-    1 + 1 + 1 + 1 + 1 + 1 + 1
-    (15 combos)
+def pentagonal(n):
+    """
+    Iterator of the values of the pentagonal series.
+    Equal to k(3k-1)/2 for k = 1, −1, 2, −2, 3
+    e.g. 1, 2, 5, 7, 12...
+    """
+    k = math.trunc((n+2)/2) * math.pow(-1, n % 2)
+    p = k * ((3 * k) - 1) / 2
+    return p
 
-An algorithm for this would generate the next line by decomposing
-whatever number is on the far right of the line until it is all ones.
+def pentagonal_series():
+    i = 0
+    while True:
+        yield pentagonal(i)
+        i += 1
 
-Once we have all partitions, we can figure out which are unique.
-"""
-
-def get_partitions(n):
-    res = [n-1, 1]
-    
-        
+print("k", "sign", "pent")
+for k in pentagonal_series():
+    print(k)
