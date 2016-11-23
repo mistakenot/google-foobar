@@ -31,7 +31,7 @@ def answer(num_buns, num_required):
     
     return distribution
 
-def valid_solution(all_keys, solution, num_bunnies):
+def is_valid_solution(all_keys, solution, num_bunnies):
     return (
         any_r_subsets_cover_universe(all_keys, solution, num_bunnies) and
         not any_r_subsets_cover_universe(all_keys, solution, num_bunnies - 1))
@@ -55,8 +55,7 @@ def any_r_subsets_cover_universe(universe_set, current_set, r):
 
 universe = set(range(3))
 test_set = [set([0, 1]), set([1, 2]), set([0, 2])]
-print(any_r_subsets_cover_universe(universe, test_set, 2) == True)
-print(any_r_subsets_cover_universe(universe, test_set, 1) == False)
+print(is_valid_solution(universe, test_set, 2) == True)
 
 universe = set(range(10))
 test_set = [
@@ -66,8 +65,7 @@ test_set = [
     set([1, 3, 5, 6, 8, 9]),
     set([2, 4, 5, 7, 8, 9])
 ]
-print(any_r_subsets_cover_universe(universe, test_set, 3) == True)
-print(any_r_subsets_cover_universe(universe, test_set, 2) == False)
+print(is_valid_solution(universe, test_set, 3) == True)
 
 universe = set(range(4))
 test_set = [
@@ -76,12 +74,11 @@ test_set = [
     set([2]), 
     set([3])
 ]
-print(any_r_subsets_cover_universe(universe, test_set, 4) == True)
-print(any_r_subsets_cover_universe(universe, test_set, 3) == False)
+print(is_valid_solution(universe, test_set, 4) == True)
 
 universe = set(range(1))
 test_set = [
     set([0]),
     set([0])
 ]
-print(any_r_subsets_cover_universe(universe, test_set, 0) == False)
+print(is_valid_solution(universe, test_set, 0) == False)
