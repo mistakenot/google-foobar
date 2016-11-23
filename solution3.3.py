@@ -7,7 +7,7 @@ def answer(n):
 
     https://en.wikipedia.org/wiki/Partition_(number_theory)#Odd_parts_and_distinct_parts
 
-    Solution is based the recurring expansion:
+    Solution is based on the recurring expansion:
         q(k) = ak + q(k − 1) + q(k − 2) − q(k − 5) − q(k − 7) + q(k − 12) + q(k − 15) − q(k − 22) − ...
     Where the subtracted values (1, 2, 5, 7...) are the generalized pentagonal numbers and
      ak is (−1)**m if k = 3m**2 − m for some integer m and is 0 otherwise.
